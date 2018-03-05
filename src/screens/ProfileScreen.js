@@ -169,17 +169,17 @@ const styles = {
   statOne: {
     color: 'white',
     fontSize: 42,
-    fontFamily: 'Roboto-Thin'
+    // fontFamily: 'Roboto-Thin'
   },
   statTwo: {
     color: 'white',
     fontSize: 42,
-    fontFamily: 'Roboto-Thin'
+    // fontFamily: 'Roboto-Thin'
   },
   statText: {
     color: 'white',
     fontSize: 16,
-    fontFamily: 'Roboto-Thin'
+    // fontFamily: 'Roboto-Thin'
   }
 };
 

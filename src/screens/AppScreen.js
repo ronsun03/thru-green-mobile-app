@@ -67,7 +67,7 @@ const styles = {
   header: {
     borderTopColor: '#3EB56C',
     borderTopWidth: 1,
-    fontFamily: 'Dosis-Medium',
+    // fontFamily: 'Dosis-Medium',
     fontSize: 36,
     color: '#525252',
     paddingTop: 35,
@@ -77,7 +77,7 @@ const styles = {
     textAlign: 'center'
   },
   caption: {
-    fontFamily: 'Roboto-Thin',
+    // fontFamily: 'Roboto-Thin',
     fontSize: 17,
     color: '#333',
     alignSelf: 'center',

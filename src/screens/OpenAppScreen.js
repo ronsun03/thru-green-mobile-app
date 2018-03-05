@@ -73,7 +73,7 @@ const styles = {
   titleStyle: {
     borderTopColor: '#3EB56C',
     borderTopWidth: 1,
-    fontFamily: 'Dosis-Medium',
+    // fontFamily: 'Dosis-Medium',
     fontSize: 36,
     color: '#3EB56C',
     paddingTop: 35,
@@ -83,7 +83,7 @@ const styles = {
     textAlign: 'center'
   },
   subtitleStyle: {
-    fontFamily: 'Roboto-Thin',
+    // fontFamily: 'Roboto-Thin',
     fontSize: 17,
     color: '#333',
     alignSelf: 'center',
