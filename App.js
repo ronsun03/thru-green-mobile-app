@@ -73,6 +73,7 @@ export default class App extends React.Component {
         }, {
           tabBarPosition: 'bottom',
           swipeEnabled: false,
+          lazy: false,
           animationEnabled: false,
           tabBarOptions: {
             activeBackgroundColor: '#3EB56C',
@@ -97,7 +98,7 @@ export default class App extends React.Component {
       }
     }, {
       tabBarPosition: 'bottom',
-      lazy: true,
+      lazy: false,
       swipeEnabled: false,
       navigationOptions: {
         tabBarVisible: false
