@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, AsyncStorage } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import geolib from 'geolib';
@@ -10,9 +10,25 @@ import { CardSection } from '../components/common';
 import Map from '../components/Map';
 import MapInterval from '../components/MapInterval';
 import LocationInterval from '../components/LocationInterval';
+import BackgroundLocation from '../components/BackgroundLocation';
 // import Box from '../components/Box';
 
 class MapScreen extends Component {
+  // state = {
+  //   loaded: false,
+  //   appToggle: null
+  // }
+
+  // componentWillMount() {
+  //   AsyncStorage.getItem('appToggle').then(response => {
+  //     const appToggle = JSON.parse(response);
+  //     this.setState({
+  //       loaded: true,
+  //       appToggle
+  //     })
+  //   })
+  // }
+
   static navigationOptions = {
     tabBarLabel: 'Maps',
     tabBarIcon: ({ tintColor }) => (
@@ -20,51 +36,67 @@ class MapScreen extends Component {
     ),
   };
 
-  runMap() {
-    if (this.props.isAppOn) {
-      return (
-        <LocationInterval />
-      );
-    }
-  }
+  // runMap() {
+  //   if (this.props.isAppOn) {
+  //     return (
+  //       <LocationInterval />
+  //     );
+  //   }
+  // }
+  //
+  // runBackgroundLocation() {
+  //   if (this.props.isAppOn) {
+  //     return (
+  //       <BackgroundLocation />
+  //     );
+  //   } else {
+  //     return <BackgroundLocation />
+  //   }
+  // }
 
   render() {
-    return (
-      <View style={styles.container}>
-        {this.runMap()}
-        <View style={styles.topContainer}>
-          <Map />
+    if (this.props.isAppOn) {
+      return (
+        <View style={styles.container}>
+          {/* {this.runMap()} */}
+          {/* {this.runBackgroundLocation()} */}
+          <BackgroundLocation />
+          <View style={styles.topContainer}>
+            <Map />
+          </View>
+          <View style={styles.bottomContainer}>
+            <CardSection style={styles.headerStyle}>
+              <Text style={styles.headerText}>Current User Stats</Text>
+            </CardSection>
+            <ScrollView>
+              <View style={{ marginBottom: 15 }}>
+                <Text>Current Position:</Text>
+                <Text>Latitude: {this.props.currentPosition.latitude}</Text>
+                <Text>Longitude: {this.props.currentPosition.longitude}</Text>
+              </View>
+              <View style={{ marginBottom: 15 }}>
+                <Text>User ID:</Text>
+                <Text>{this.props.user ? this.props.user.uid : null}</Text>
+              </View>
+              <View style={{ marginBottom: 15 }}>
+                <Text>In Area:</Text>
+                <Text>{this.props.currentArea ? this.props.currentArea.AreaID : 'None'}</Text>
+              </View>
+              <View style={{ marginBottom: 15 }}>
+                <Text>In Sector:</Text>
+                <Text>{this.props.currentSector ? this.props.currentSector.SectorID : 'None'}</Text>
+              </View>
+              <View style={{ marginBottom: 15 }}>
+                <Text>Speed:</Text>
+                <Text>{this.props.currentSpeed} mph</Text>
+              </View>
+            </ScrollView>
+          </View>
         </View>
-        <View style={styles.bottomContainer}>
-          <CardSection style={styles.headerStyle}>
-            <Text style={styles.headerText}>Current User Stats</Text>
-          </CardSection>
-          <ScrollView>
-            <View style={{ marginBottom: 15 }}>
-              <Text>Current Position:</Text>
-              <Text>Latitude: {this.props.currentPosition.latitude}</Text>
-              <Text>Longitude: {this.props.currentPosition.longitude}</Text>
-            </View>
-            <View style={{ marginBottom: 15 }}>
-              <Text>User ID:</Text>
-              <Text>{this.props.user ? this.props.user.uid : null}</Text>
-            </View>
-            <View style={{ marginBottom: 15 }}>
-              <Text>In Area:</Text>
-              <Text>{this.props.currentArea ? this.props.currentArea.AreaID : 'None'}</Text>
-            </View>
-            <View style={{ marginBottom: 15 }}>
-              <Text>In Sector:</Text>
-              <Text>{this.props.currentSector ? this.props.currentSector.SectorID : 'None'}</Text>
-            </View>
-            <View style={{ marginBottom: 15 }}>
-              <Text>Speed:</Text>
-              <Text>{this.props.currentSpeed} mph</Text>
-            </View>
-          </ScrollView>
-        </View>
-      </View>
-    );
+      );
+    } else {
+      return (<BackgroundLocation />)
+    }
   }
 }
 

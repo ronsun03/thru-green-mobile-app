@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { View, Dimensions } from 'react-native';
-// import { MapView } from 'expo';
 import MapView from 'react-native-maps';
 import Permissions from 'react-native-permissions';
 import { connect } from 'react-redux';
@@ -19,7 +18,7 @@ const LATITUDE_DELTA = 0.002;
 // const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const LONGITUDE_DELTA = 0.0035;
 
-class MapInterval extends Component {
+class LocationInterval extends Component {
   state = {
     locationInterval: null
   }
@@ -97,4 +96,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, actions)(MapInterval);
+export default connect(mapStateToProps, actions)(LocationInterval);

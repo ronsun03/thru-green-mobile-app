@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 // import { Font } from 'expo';
-import { View, Text, Switch, Image } from 'react-native';
+import { View, Text, Switch, Image, AsyncStorage } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
+import firebase from 'firebase';
 import ToggleSwitch from 'toggle-switch-react-native';
 
 import * as actions from '../actions';
 
 class AppScreen extends Component {
+  state = {
+    loaded: false,
+    appToggle: null
+  }
+
   static navigationOptions = {
     tabBarLabel: 'App',
     tabBarIcon: ({ tintColor }) => (
@@ -15,41 +21,53 @@ class AppScreen extends Component {
     ),
   };
 
-  // async componentDidMount() {
-  //   await Font.loadAsync({
-  //     'Dosis-Bold': require('../../assets/fonts/Dosis-Bold.ttf'),
-  //     'Dosis-Medium': require('../../assets/fonts/Dosis-Medium.ttf'),
-  //     'Dosis-Light': require('../../assets/fonts/Dosis-Light.ttf'),
-  //     'OpenSans-Regular': require('../../assets/fonts/OpenSans-Regular.ttf'),
-  //     'Roboto-Light': require('../../assets/fonts/Roboto-Light.ttf'),
-  //     'Roboto-Thin': require('../../assets/fonts/Roboto-Thin.ttf'),
-  //   })
-  //
-  //   this.props.loadFonts();
-  // }
+  componentWillMount() {
+    AsyncStorage.getItem('appToggle').then(response => {
+      const appToggle = JSON.parse(response);
+      console.log('appToggle get: ', appToggle);
+      this.props.initializeToggle(appToggle)
+      this.setState({
+        loaded: true,
+        appToggle
+      })
+    })
+
+    // Get latest list of areas and store in localstorage
+    const areaRef = firebase.database().ref('/areas');
+    areaRef.once('value', snapshot => {
+      AsyncStorage.setItem('areaList', JSON.stringify(snapshot.val())).then(() => {
+        console.log('Area List successfully updated.');
+      })
+    })
+  }
 
   render() {
-    return (
-      this.props.fontsLoaded ? (
-        <View style={styles.container}>
-          <Image
-            style={styles.image}
-            source={require('../../assets/images/logo.jpg')}
-          />
-          <Text style={styles.header}>Welcome to ThruGreen</Text>
-          <Text style={styles.caption}>Flip the switch below to get started.</Text>
-          <ToggleSwitch
-            isOn={false}
-            onColor='#3EB56C'
-            offColor='#F78D8D'
-            // label='Example label'
-            labelStyle={{ color: 'black', fontWeight: '900' }}
-            size='large'
-            onToggle={(isOn) => this.props.appToggle(isOn)}
-          />
-        </View>
-      ) : null
-    );
+    if (this.state.loaded) {
+      return (
+        this.props.fontsLoaded ? (
+          <View style={styles.container}>
+            <Image
+              style={styles.image}
+              source={require('../../assets/images/logo.jpg')}
+            />
+            <Text style={styles.header}>Welcome to ThruGreen</Text>
+            <Text style={styles.caption}>Flip the switch below to get started.</Text>
+            <ToggleSwitch
+              isOn={this.state.appToggle}
+              onColor='#3EB56C'
+              offColor='#F78D8D'
+              // label='Example label'
+              labelStyle={{ color: 'black', fontWeight: '900' }}
+              size='large'
+              onToggle={(isOn) => this.props.appToggle(isOn)}
+            />
+          </View>
+        ) : null
+      );
+    } else {
+      return <View />
+    }
+
   }
 }
 
@@ -88,6 +106,7 @@ const styles = {
 
 function mapStateToProps(state) {
   return {
+    isAppOn: state.map.isAppOn,
     fontsLoaded: state.auth.fontsLoaded
   };
 }

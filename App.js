@@ -20,7 +20,6 @@ export default class App extends React.Component {
   componentWillMount() {
     console.ignoredYellowBox = ['Setting a timer'];
 
-    // Initialize main firebase app
     const config = {
       apiKey: "AIzaSyCPxWPYBtWLLmGslSTuBQ_pjs0jcn4blU8",
       authDomain: "location-prototype-138d5.firebaseapp.com",
@@ -29,9 +28,7 @@ export default class App extends React.Component {
       storageBucket: "location-prototype-138d5.appspot.com",
       messagingSenderId: "799160119564"
     };
-    firebase.initializeApp(config);
 
-    // Initialize other live database
     const liveDBConfig = {
       apiKey: "AIzaSyAaaYTKixKh49UKu-iUHVQxJPrD03TEySM",
       authDomain: "thru-green-live-db.firebaseapp.com",
@@ -41,7 +38,15 @@ export default class App extends React.Component {
       messagingSenderId: "455601807101"
     };
 
-    const liveDB = firebase.initializeApp(liveDBConfig, "liveDB");
+    // Check if firebase is already initialized
+    if (!firebase.apps.length) {
+      // Initialize main firebase app
+      firebase.initializeApp(config);
+
+      // Initialize other live database
+      const liveDB = firebase.initializeApp(liveDBConfig, "liveDB");
+    }
+
 
     // Use the liveDB variable to retrieve the other app's services
     // const otherDatabase = otherApp.database();

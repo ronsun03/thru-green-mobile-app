@@ -13,7 +13,6 @@ class LoginScreen extends Component {
   componentWillMount() {
     firebase.auth().onAuthStateChanged((user) => {
           if (user) {
-            console.log('user logged in: ', user);
             this.props.existingUserLoggedIn(user, () => { this.props.navigation.navigate('main'); });
           }
        });

@@ -13,25 +13,9 @@ class WelcomeScreen extends Component {
   componentWillMount() {
     firebase.auth().onAuthStateChanged((user) => {
           if (user) {
-            console.log('user logged in: ', user);
             this.props.existingUserLoggedIn(user, () => { this.props.navigation.navigate('main'); });
           }
        });
-  }
-
-
-
-  async componentDidMount() {
-    // await Font.loadAsync({
-    //   'Dosis-Bold': require('../../assets/fonts/Dosis-Bold.ttf'),
-    //   'Dosis-Medium': require('../../assets/fonts/Dosis-Medium.ttf'),
-    //   'Dosis-Light': require('../../assets/fonts/Dosis-Light.ttf'),
-    //   'OpenSans-Regular': require('../../assets/fonts/OpenSans-Regular.ttf'),
-    //   'Roboto-Light': require('../../assets/fonts/Roboto-Light.ttf'),
-    //   'Roboto-Thin': require('../../assets/fonts/Roboto-Thin.ttf'),
-    // });
-
-    this.props.loadFonts();
   }
 
   render() {

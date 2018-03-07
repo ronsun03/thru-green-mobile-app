@@ -27,7 +27,6 @@ export const existingUserLoggedIn = (user, callback) => {
     const userRef = firebase.database().ref(`/user/${user.uid}`);
 
     const d = new Date();
-    console.log('date: ', d);
 
     userRef.update({
       lastLoggedIn: d

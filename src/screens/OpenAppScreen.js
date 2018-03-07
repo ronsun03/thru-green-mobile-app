@@ -16,7 +16,6 @@ class OpenAppScreen extends Component {
 
   componentWillMount() {
     firebase.auth().onAuthStateChanged((user) => {
-      console.log('is there user?', user);
           if (user) {
             console.log('user logged in: ', user);
             this.props.existingUserLoggedIn(user, () => { this.props.navigation.navigate('main'); });
