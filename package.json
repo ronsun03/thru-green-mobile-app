@@ -11,6 +11,7 @@
     "firebase": "^4.10.1",
     "geolib": "^2.0.24",
     "lodash": "^4.17.5",
+    "npm": "^5.7.1",
     "react": "^16.0.0",
     "react-native": "^0.51.0",
     "react-native-background-geolocation": "^2.11.0",

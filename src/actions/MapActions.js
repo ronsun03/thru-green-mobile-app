@@ -61,7 +61,13 @@ export const pushDataToDB = (region, speed, user) => {
       time: date
     };
 
-    axios.post('http://ec2-18-219-64-185.us-east-2.compute.amazonaws.com:8080/api/push-to-sql', object);
+    axios.post('http://ec2-18-219-64-185.us-east-2.compute.amazonaws.com:8080/api/push-to-sql', object)
+      .then(response => {
+        console.log('pushDataToDB response: ', response);
+      })
+      .catch(error => {
+        console.log('pushDataToDB error: ', error);
+      });
   };
 };
 
