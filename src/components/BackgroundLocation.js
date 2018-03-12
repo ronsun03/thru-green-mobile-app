@@ -16,16 +16,18 @@ class BackgroundLocation extends Component {
 
     const appToggle = JSON.parse(await AsyncStorage.getItem('appToggle'));
 
-    BackgroundGeolocation.removeListeners();
-
     console.log('backgroundlocation appToggle: ', appToggle);
 
     if (appToggle) {
+      BackgroundGeolocation.removeListeners();
+
       console.log(`appToggle is ${appToggle}, add BackgroundGeolocation listener`);
       const configurationOptions = {
         desiredAccuracy: 0,
         distanceFilter: 5,
         activityRecognitionInterval: 1,
+        notificationTitle: 'ThruGreen Active',
+        notificationText: 'Background location services are running'
       }
 
       // console.log('configurationOptions: ', configurationOptions);
@@ -47,27 +49,10 @@ class BackgroundLocation extends Component {
     }
 
     if (!appToggle) {
-      console.log(`appToggle is ${appToggle}, remove BackgroundGeolocation listener`);
-
-      BackgroundGeolocation.changePace(false, function() {
-        console.log('background location now stationery');
-        // this.props.keepAppOnOrOff(false)
-      });
-
-      BackgroundGeolocation.un('location', this.onLocation);
-      BackgroundGeolocation.removeListeners();
+      console.log(`appToggle is ${appToggle}, stop BackgroundLocation`);
+      BackgroundGeolocation.stop();
     }
   }
-
-  // componentWillUnmount() {
-  //   BackgroundGeolocation.un('location', this.onLocation);
-  //
-  //   BackgroundGeolocation.changePace(false, function() {
-  //     console.log('background location now stationery');
-  //     // this.props.keepAppOnOrOff(false)
-  //   });
-  // }
-
 
   onLocation(location) {
     const d = new Date();

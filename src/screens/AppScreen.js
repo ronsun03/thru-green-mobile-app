@@ -44,25 +44,23 @@ class AppScreen extends Component {
   render() {
     if (this.state.loaded) {
       return (
-        this.props.fontsLoaded ? (
-          <View style={styles.container}>
-            <Image
-              style={styles.image}
-              source={require('../../assets/images/logo.jpg')}
-            />
-            <Text style={styles.header}>Welcome to ThruGreen</Text>
-            <Text style={styles.caption}>Flip the switch below to get started.</Text>
-            <ToggleSwitch
-              isOn={this.state.appToggle}
-              onColor='#3EB56C'
-              offColor='#F78D8D'
-              // label='Example label'
-              labelStyle={{ color: 'black', fontWeight: '900' }}
-              size='large'
-              onToggle={(isOn) => this.props.appToggle(isOn)}
-            />
-          </View>
-        ) : null
+        <View style={styles.container}>
+          <Image
+            style={styles.image}
+            source={require('../../assets/images/logo.jpg')}
+          />
+          <Text style={styles.header}>Welcome to ThruGreen</Text>
+          <Text style={styles.caption}>Flip the switch below to get started.</Text>
+          <ToggleSwitch
+            isOn={this.state.appToggle}
+            onColor='#3EB56C'
+            offColor='#F78D8D'
+            // label='Example label'
+            labelStyle={{ color: 'black', fontWeight: '900' }}
+            size='large'
+            onToggle={(isOn) => this.props.appToggle(isOn)}
+          />
+        </View>
       );
     } else {
       return <View />
@@ -85,7 +83,7 @@ const styles = {
   header: {
     borderTopColor: '#3EB56C',
     borderTopWidth: 1,
-    // fontFamily: 'Dosis-Medium',
+    fontFamily: 'Dosis-Medium',
     fontSize: 36,
     color: '#525252',
     paddingTop: 35,
@@ -95,7 +93,7 @@ const styles = {
     textAlign: 'center'
   },
   caption: {
-    // fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Thin',
     fontSize: 17,
     color: '#333',
     alignSelf: 'center',

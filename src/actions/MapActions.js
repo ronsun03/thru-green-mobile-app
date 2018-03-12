@@ -53,21 +53,44 @@ export const pushDataToDB = (region, speed, user) => {
         ('00' + date.getUTCMinutes()).slice(-2) + ':' +
         ('00' + date.getUTCSeconds()).slice(-2);
 
+    let mph = speed;
+
+    if (speed < 0) {
+      mph = 0;
+    }
+
     const object = {
       uid: user.uid,
       lat: region.latitude,
       lng: region.longitude,
-      speed,
+      speed: mph,
       time: date
     };
 
-    axios.post('http://ec2-18-219-64-185.us-east-2.compute.amazonaws.com:8080/api/push-to-sql', object)
-      .then(response => {
-        console.log('pushDataToDB response: ', response);
-      })
-      .catch(error => {
-        console.log('pushDataToDB error: ', error);
-      });
+    AsyncStorage.getItem('tempData').then(response => {
+      // console.log('getItem response: ', response);
+      if (!response) {
+        // Create an array and push this data to it
+        const array = [];
+        array.push(object);
+        AsyncStorage.setItem('tempData', JSON.stringify(array))
+      }
+
+      if (response) {
+        const array = JSON.parse(response);
+        // console.log('temp array: ', array);
+        array.push(object);
+        AsyncStorage.setItem('tempData', JSON.stringify(array))
+      }
+    })
+
+    // axios.post('http://ec2-18-219-64-185.us-east-2.compute.amazonaws.com:8080/api/push-to-sql', object)
+    //   .then(response => {
+    //     console.log('pushDataToDB response: ', response);
+    //   })
+    //   .catch(error => {
+    //     console.log('pushDataToDB error: ', error);
+    //   });
   };
 };
 

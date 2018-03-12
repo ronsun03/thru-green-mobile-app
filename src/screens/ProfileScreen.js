@@ -6,21 +6,6 @@ import { connect } from 'react-redux';
 import * as actions from '../actions';
 
 class ProfileScreen extends Component {
-  // static navigationOptions = ({ navigation }) => ({
-  //   tabBarLabel: 'Profile',
-  //   headerRight: (
-  //     <Button
-  //       title='Logout'
-  //       onPress={() => navigation.navigate('settings')}
-  //       backgroundColor="rgba(0,0,0,0)"
-  //       color="rgba(0, 122, 255, 1)"
-  //     />
-  //   ),
-  //   tabBarIcon: ({ tintColor }) => (
-  //       <Icon name="person" size={30} color={tintColor} />
-  //   )
-  // })
-
   static navigationOptions = {
     tabBarLabel: 'Profile',
     tabBarIcon: ({ tintColor }) => (
@@ -30,6 +15,10 @@ class ProfileScreen extends Component {
 
   componentWillMount() {
     this.props.getUserData();
+  }
+
+  componentDidMount() {
+    console.log('Load ProfileScreen');
   }
 
   logoutUser() {

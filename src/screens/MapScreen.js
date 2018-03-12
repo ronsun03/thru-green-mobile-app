@@ -8,33 +8,22 @@ import geolib from 'geolib';
 import * as actions from '../actions';
 import { CardSection } from '../components/common';
 import Map from '../components/Map';
-import MapInterval from '../components/MapInterval';
-import LocationInterval from '../components/LocationInterval';
+// import MapInterval from '../components/MapInterval';
+// import LocationInterval from '../components/LocationInterval';
 import BackgroundLocation from '../components/BackgroundLocation';
 // import Box from '../components/Box';
 
 class MapScreen extends Component {
-  // state = {
-  //   loaded: false,
-  //   appToggle: null
-  // }
-
-  // componentWillMount() {
-  //   AsyncStorage.getItem('appToggle').then(response => {
-  //     const appToggle = JSON.parse(response);
-  //     this.setState({
-  //       loaded: true,
-  //       appToggle
-  //     })
-  //   })
-  // }
-
   static navigationOptions = {
     tabBarLabel: 'Maps',
     tabBarIcon: ({ tintColor }) => (
         <Icon name="my-location" size={30} color={tintColor} />
     ),
   };
+
+  componentDidMount() {
+    console.log('Load MapScreen');
+  }
 
   // runMap() {
   //   if (this.props.isAppOn) {
@@ -55,11 +44,10 @@ class MapScreen extends Component {
   // }
 
   render() {
+    console.log('run mapscreen render()');
     if (this.props.isAppOn) {
       return (
         <View style={styles.container}>
-          {/* {this.runMap()} */}
-          {/* {this.runBackgroundLocation()} */}
           <BackgroundLocation />
           <View style={styles.topContainer}>
             <Map />
@@ -95,7 +83,12 @@ class MapScreen extends Component {
         </View>
       );
     } else {
-      return (<BackgroundLocation />)
+      return (
+        <View>
+          <Text>Flip the switch to load the map</Text>
+          <BackgroundLocation />
+        </View>
+      )
     }
   }
 }

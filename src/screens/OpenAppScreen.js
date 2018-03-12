@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 // import { Font } from 'expo';
-import { View, Text, Image, AsyncStorage } from 'react-native';
+import { View, Text, Image, AsyncStorage, AppState } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 import * as actions from '../actions';
 
@@ -21,39 +22,34 @@ class OpenAppScreen extends Component {
             this.props.existingUserLoggedIn(user, () => { this.props.navigation.navigate('main'); });
           } else {
             this.props.navigation.navigate('welcome');
-
-            // console.log('no user run async code');
-            // AsyncStorage.getItem('alreadyLaunched').then(value => {
-            //   console.log('async value', value);
-            //   if (value == null) {
-            //     console.log('set asyncstorage value');
-            //     AsyncStorage.setItem('alreadyLaunched', true);
-            //     this.setState({ firstLaunch: true });
-            //     this.props.navigation.navigate('welcome');
-            //   } else {
-            //     this.setState({ firstLaunch: false });
-            //     this.props.navigation.navigate('login');
-            //   }
-            // });
           }
        });
+
+     // Watch app state to push temporary data to database when changed
+    AppState.addEventListener('change', this._handleAppStateChange);
+
   }
 
-  componentDidMount() {
-    console.log('componentDidMount');
+  componentWillUnmount() {
+    // Remove app state listener on unmount
+    AppState.removeEventListener('change', this._handleAppStateChange);
   }
 
-  async componentDidMount() {
-    // await Font.loadAsync({
-    //   'Dosis-Bold': require('../../assets/fonts/Dosis-Bold.ttf'),
-    //   'Dosis-Medium': require('../../assets/fonts/Dosis-Medium.ttf'),
-    //   'Dosis-Light': require('../../assets/fonts/Dosis-Light.ttf'),
-    //   'OpenSans-Regular': require('../../assets/fonts/OpenSans-Regular.ttf'),
-    //   'Roboto-Light': require('../../assets/fonts/Roboto-Light.ttf'),
-    //   'Roboto-Thin': require('../../assets/fonts/Roboto-Thin.ttf'),
-    // });
+  _handleAppStateChange = nextAppState => {
+    AsyncStorage.getItem('tempData').then(response => {
+      if (response) {
+        const array = JSON.parse(response);
 
-    this.props.loadFonts();
+        axios.post('http://ec2-18-219-64-185.us-east-2.compute.amazonaws.com:8080/api/push-array-to-sql', array)
+          .then(response => {
+            console.log('tempData successfully pushed to sql DB');
+            AsyncStorage.removeItem('tempData')
+          })
+          .catch(error => {
+            console.log('pushDataToDB error: ', error);
+          });
+      }
+    })
   }
 
   render() {

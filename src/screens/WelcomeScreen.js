@@ -19,36 +19,28 @@ class WelcomeScreen extends Component {
   }
 
   render() {
-    console.log('this.props.fontsLoaded', this.props.fontsLoaded);
     return (
-      this.props.fontsLoaded ? (
-        <View style={styles.loginContainer}>
-          <View style={styles.topLogin}>
-            <View style={styles.centerColumn}>
-              <View style={styles.stack}>
-                <Image
-                  style={styles.image}
-                  source={require('../../assets/images/logo.jpg')}
-                />
-                <Text style={styles.titleStyle}>
-                  Welcome to ThruGreen
-                </Text>
-                <Text style={styles.subtitleStyle}>
-                  To get started, create an account below.
-                </Text>
-              </View>
+      <View style={styles.loginContainer}>
+        <View style={styles.topLogin}>
+          <View style={styles.centerColumn}>
+            <View style={styles.stack}>
+              <Image
+                style={styles.image}
+                source={require('../../assets/images/logo.jpg')}
+              />
+              <Text style={styles.titleStyle}>
+                Welcome to ThruGreen
+              </Text>
+              <Text style={styles.subtitleStyle}>
+                To get started, create an account below.
+              </Text>
             </View>
           </View>
-          <View style={styles.formHolder}>
-            <CreateAccountForm navigation={this.props.navigation} />
-          </View>
         </View>
-      ) : null
-      // <View>
-      //   <Text>
-      //     Hello
-      //   </Text>
-      // </View>
+        <View style={styles.formHolder}>
+          <CreateAccountForm navigation={this.props.navigation} />
+        </View>
+      </View>
     );
   }
 }
