@@ -9,7 +9,7 @@ import * as actions from '../actions';
 import { CardSection } from '../components/common';
 import Map from '../components/Map';
 // import MapInterval from '../components/MapInterval';
-// import LocationInterval from '../components/LocationInterval';
+import LocationInterval from '../components/LocationInterval';
 import BackgroundLocation from '../components/BackgroundLocation';
 // import Box from '../components/Box';
 
@@ -44,7 +44,6 @@ class MapScreen extends Component {
   // }
 
   render() {
-    console.log('run mapscreen render()');
     if (this.props.isAppOn) {
       return (
         <View style={styles.container}>

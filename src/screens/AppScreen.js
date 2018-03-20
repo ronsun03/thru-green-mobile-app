@@ -42,7 +42,7 @@ class AppScreen extends Component {
   }
 
   render() {
-    if (this.state.loaded) {
+    if (this.state.loaded && this.props.user) {
       return (
         <View style={styles.container}>
           <Image
@@ -58,7 +58,7 @@ class AppScreen extends Component {
             // label='Example label'
             labelStyle={{ color: 'black', fontWeight: '900' }}
             size='large'
-            onToggle={(isOn) => this.props.appToggle(isOn)}
+            onToggle={(isOn) => this.props.appToggle(isOn, this.props.user)}
           />
         </View>
       );
@@ -105,7 +105,8 @@ const styles = {
 function mapStateToProps(state) {
   return {
     isAppOn: state.map.isAppOn,
-    fontsLoaded: state.auth.fontsLoaded
+    fontsLoaded: state.auth.fontsLoaded,
+    user: state.auth.user,
   };
 }
 

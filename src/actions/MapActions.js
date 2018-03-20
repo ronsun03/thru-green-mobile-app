@@ -31,7 +31,7 @@ export const initializeToggle = boolean => {
   }
 }
 
-export const appToggle = isOn => {
+export const appToggle = (isOn, user) => {
   return (dispatch) => {
     AsyncStorage.setItem('appToggle', JSON.stringify(isOn)).then(() => {
       console.log(`App toggle set to ${isOn} and stored in async storage.`);
@@ -40,6 +40,28 @@ export const appToggle = isOn => {
         payload: isOn
       });
     });
+
+    // if app is turned off, turn last sector off
+    if (!isOn) {
+      const userRef = firebase.database().ref(`/user/${user.uid}`);
+      const liveDBRef = firebase.app('liveDB').database().ref('/');
+
+      AsyncStorage.getItem('lastSector').then(response => {
+        const lastSector = response;
+
+        liveDBRef.update({
+          [lastSector]: false
+        });
+
+        AsyncStorage.removeItem('lastSector');
+      });
+
+      userRef.update({
+        lightChecks: {
+          isInSector: false
+        }
+      });
+    }
   };
 };
 
@@ -161,7 +183,8 @@ export const checkInArea = (currentPosition, user) => {
 
       const areaRef = firebase.database().ref('/areas');
       const userRef = firebase.database().ref(`/user/${user.uid}`);
-      const appStatsRef = firebase.database().ref(`/appStats/`);
+      // const appStatsRef = firebase.database().ref(`/appStats/`);
+      const liveDBRef = firebase.app('liveDB').database().ref('/');
 
       // Get latest list of areas
       AsyncStorage.getItem('areaList').then(response => {
@@ -243,7 +266,6 @@ export const checkInArea = (currentPosition, user) => {
                       // Only send a light change to live server if randomized number is true
                       changeLight = true;
                       currentNumTimesLightChanged++;
-                      const liveDBRef = firebase.app('liveDB').database().ref('/');
 
                       liveDBRef.update({
                         [sector.SectorID]: true
@@ -266,8 +288,29 @@ export const checkInArea = (currentPosition, user) => {
                       }
                     });
 
-                    // Update app stats
-                    console.log('appStatsRef: ', appStatsRef);
+                    // Add last sector to AsyncStorage
+                    AsyncStorage.setItem('lastSector', sector.SectorID);
+                  }
+
+                  // Check is user went straight from one sector to the other
+                  if (currentUser.lightChecks.isInSector == true) {
+                    const currentSectorID = sector.SectorID;
+                    const userLastSector = currentUser.lightChecks.currentSector;
+
+                    if (currentSectorID !== userLastSector) {
+                      userRef.update({
+                        lightChecks: {
+                          isInSector: true,
+                          currentSector: currentSectorID
+                        }
+                      });
+
+                      liveDBRef.update({
+                        [userLastSector]: false
+                      });
+
+                      AsyncStorage.setItem('lastSector', userLastSector);
+                    }
                   }
                 });
               }

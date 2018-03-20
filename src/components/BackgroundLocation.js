@@ -24,8 +24,10 @@ class BackgroundLocation extends Component {
       console.log(`appToggle is ${appToggle}, add BackgroundGeolocation listener`);
       const configurationOptions = {
         desiredAccuracy: 0,
-        distanceFilter: 5,
-        activityRecognitionInterval: 1,
+        distanceFilter: 2,
+        // disableElasticity: true,
+        fastestLocationUpdateInterval: 2000,
+        activityRecognitionInterval: 1000,
         notificationTitle: 'ThruGreen Active',
         notificationText: 'Background location services are running'
       }
@@ -34,7 +36,7 @@ class BackgroundLocation extends Component {
 
       // Listen to events
       BackgroundGeolocation.on('location', this.onLocation.bind(this), this.onError);
-      // BackgroundGeolocation.on('motionchange', this.onMotionChange.bind(this), this.onError);
+      BackgroundGeolocation.on('motionchange', this.onMotion.bind(this), this.onError);
 
       // Configure
       BackgroundGeolocation.configure(configurationOptions)
@@ -44,7 +46,7 @@ class BackgroundLocation extends Component {
       });
 
       BackgroundGeolocation.start(state => {
-        // console.log('- BackgroundGeolocation started, state: ', state);
+        console.log('- BackgroundGeolocation started, state: ', state);
       })
     }
 
@@ -71,7 +73,11 @@ class BackgroundLocation extends Component {
     };
 
     // convert speed from m/s to mph
-    const speed = (location.coords.speed * 2.23694).toFixed(1);
+    let speed = (location.coords.speed * 2.23694).toFixed(1);
+
+    if (speed < 0) {
+      speed = 0;
+    }
 
     this.props.setCurrentPosition(initialRegion);
     this.props.checkInArea(initialRegion, this.props.user);
@@ -79,9 +85,36 @@ class BackgroundLocation extends Component {
     this.props.pushDataToDB(initialRegion, speed, this.props.user);
   }
 
-  onMotionChange(event) {
-    console.log('onMotionChange(): ', event);
+  onMotion({location}) {
+    // console.log('onMotion location: ', location);
+    const d = new Date();
+    const sec = d.getSeconds();
+
+    console.log('run on motion(), seconds: ', sec);
+
+    const lat = parseFloat(location.coords.latitude);
+    const long = parseFloat(location.coords.longitude);
+
+    const initialRegion = {
+      latitude: lat,
+      longitude: long,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA
+    };
+
+    // convert speed from m/s to mph
+    let speed = (location.coords.speed * 2.23694).toFixed(1);
+
+    if (speed < 0) {
+      speed = 0;
+    }
+
+    this.props.setCurrentPosition(initialRegion);
+    this.props.checkInArea(initialRegion, this.props.user);
+    this.props.setCurrentSpeed(speed);
+    this.props.pushDataToDB(initialRegion, speed, this.props.user);
   }
+
 
   onError() {
     console.log('Error getting location.');

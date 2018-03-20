@@ -10,8 +10,8 @@ import {
 const INITIAL_STATE = {
   isAppOn: false,
   currentPosition: {
-    latitude: 38.9013,
-    longitude: -77.0446,
+    latitude: 38.806385,
+    longitude: -77.511892,
     latitudeDelta: 0.002,
     longitudeDelta: 0.0035
   },

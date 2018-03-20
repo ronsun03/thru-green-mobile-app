@@ -20,7 +20,8 @@ const LONGITUDE_DELTA = 0.0035;
 
 class LocationInterval extends Component {
   state = {
-    locationInterval: null
+    locationInterval: null,
+    locationPermission: null
   }
 
   componentWillMount() {
@@ -66,7 +67,7 @@ class LocationInterval extends Component {
         // error => alert(JSON.stringify(error)),
         error => console.log('getCurrentPosition error', JSON.stringify(error)),
         // null,
-        { enableHighAccuracy: true, timeout: 250, maximumAge: 2 }
+        { enableHighAccuracy: true, timeout: 250 }
       );
     }, 2000);
 
@@ -87,7 +88,6 @@ class LocationInterval extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log('location interval state: ', state);
   return {
     isAppOn: state.map.isAppOn,
     currentPosition: state.map.currentPosition,
