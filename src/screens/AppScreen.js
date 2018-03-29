@@ -43,6 +43,12 @@ class AppScreen extends Component {
 
   render() {
     if (this.state.loaded && this.props.user) {
+      let appToggle = this.state.appToggle;
+
+      if (appToggle === null) {
+        appToggle = false;
+      }
+
       return (
         <View style={styles.container}>
           <Image
@@ -52,7 +58,7 @@ class AppScreen extends Component {
           <Text style={styles.header}>Welcome to ThruGreen</Text>
           <Text style={styles.caption}>Flip the switch below to get started.</Text>
           <ToggleSwitch
-            isOn={this.state.appToggle}
+            isOn={appToggle}
             onColor='#3EB56C'
             offColor='#F78D8D'
             // label='Example label'

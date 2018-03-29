@@ -29,10 +29,10 @@ class BackgroundLocation extends Component {
         fastestLocationUpdateInterval: 2000,
         activityRecognitionInterval: 1000,
         notificationTitle: 'ThruGreen Active',
-        notificationText: 'Background location services are running'
+        notificationText: 'Background location services are running',
+        // stationaryRadius: 10
       }
 
-      // console.log('configurationOptions: ', configurationOptions);
 
       // Listen to events
       BackgroundGeolocation.on('location', this.onLocation.bind(this), this.onError);
@@ -41,11 +41,12 @@ class BackgroundLocation extends Component {
       // Configure
       BackgroundGeolocation.configure(configurationOptions)
 
-      BackgroundGeolocation.changePace(true, function() {
-        console.log('background location now tracking');
-      });
 
       BackgroundGeolocation.start(state => {
+        BackgroundGeolocation.changePace(true, function() {
+          console.log('background location now tracking');
+        });
+
         console.log('- BackgroundGeolocation started, state: ', state);
       })
     }

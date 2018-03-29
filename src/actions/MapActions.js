@@ -263,6 +263,7 @@ export const checkInArea = (currentPosition, user) => {
                     let changeLight = false;
 
                     if (randomNum <= percentage) {
+                      console.log('RAN NUM HIT - update live db');
                       // Only send a light change to live server if randomized number is true
                       changeLight = true;
                       currentNumTimesLightChanged++;
@@ -271,6 +272,7 @@ export const checkInArea = (currentPosition, user) => {
                         [sector.SectorID]: true
                       });
                     } else {
+                      console.log('RAN NUM FAIL');
                       changeLight = false;
                     }
 
