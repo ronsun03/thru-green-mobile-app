@@ -84,7 +84,7 @@ class MapScreen extends Component {
     } else {
       return (
         <View>
-          <Text>Flip the switch to load the map</Text>
+          <Text style={{ paddingTop: 80, textAlign: 'center', alignSelf: 'center', fontSize: 20 }}>Flip the switch to load the map</Text>
           <BackgroundLocation />
         </View>
       )

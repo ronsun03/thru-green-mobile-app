@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, ScrollView } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 
@@ -34,27 +34,31 @@ class LoginScreen extends Component {
 
   render() {
     return (
-      <View style={styles.loginContainer}>
-        <View style={styles.topLogin}>
-          <View style={styles.centerColumn}>
-            <View style={styles.stack}>
-              <Image
-                style={styles.image}
-                source={require('../../assets/images/logo.jpg')}
-              />
-              {/* <Text style={styles.titleStyle}>
-                ThruGreen
-              </Text>
-              <Text style={styles.subtitleStyle}>
-                Stay Safe. Arrive Quickly.
-              </Text> */}
+      <View style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={{ flex: 1 }}>
+          <View style={styles.loginContainer}>
+            <View style={styles.topLogin}>
+              <View style={styles.centerColumn}>
+                <View style={styles.stack}>
+                  <Image
+                    style={styles.image}
+                    source={require('../../assets/images/logo.jpg')}
+                  />
+                  {/* <Text style={styles.titleStyle}>
+                    ThruGreen
+                  </Text>
+                  <Text style={styles.subtitleStyle}>
+                    Stay Safe. Arrive Quickly.
+                  </Text> */}
+                </View>
+              </View>
+            </View>
+            <View style={styles.formHolder}>
+              <LoginForm navigation={this.props.navigation} />
+              {this.renderCreateAccountButton()}
             </View>
           </View>
-        </View>
-        <View style={styles.formHolder}>
-          <LoginForm navigation={this.props.navigation} />
-          {this.renderCreateAccountButton()}
-        </View>
+        </ScrollView>
       </View>
     );
   }

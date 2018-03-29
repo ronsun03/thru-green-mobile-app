@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import { Font } from 'expo';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, ScrollView } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 
@@ -20,27 +20,29 @@ class WelcomeScreen extends Component {
 
   render() {
     return (
-      <View style={styles.loginContainer}>
-        <View style={styles.topLogin}>
-          <View style={styles.centerColumn}>
-            <View style={styles.stack}>
-              <Image
-                style={styles.image}
-                source={require('../../assets/images/logo.jpg')}
-              />
-              <Text style={styles.titleStyle}>
-                Welcome to ThruGreen
-              </Text>
-              <Text style={styles.subtitleStyle}>
-                To get started, create an account below.
-              </Text>
+      <ScrollView>
+        <View style={styles.loginContainer}>
+          <View style={styles.topLogin}>
+            <View style={styles.centerColumn}>
+              <View style={styles.stack}>
+                <Image
+                  style={styles.image}
+                  source={require('../../assets/images/logo.jpg')}
+                />
+                <Text style={styles.titleStyle}>
+                  Welcome to ThruGreen
+                </Text>
+                <Text style={styles.subtitleStyle}>
+                  To get started, create an account below.
+                </Text>
+              </View>
             </View>
           </View>
+          <View style={styles.formHolder}>
+            <CreateAccountForm navigation={this.props.navigation} />
+          </View>
         </View>
-        <View style={styles.formHolder}>
-          <CreateAccountForm navigation={this.props.navigation} />
-        </View>
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -68,14 +70,16 @@ const styles = {
     fontSize: 17,
     color: '#333',
     alignSelf: 'center',
-    textAlign: 'center'
+    textAlign: 'center',
+    marginBottom: 15
   },
   loginContainer: {
     backgroundColor: 'white',
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    height: '100%'
+    height: '100%',
+    paddingTop: 40
   },
   topLogin: {
     flex: 2,
