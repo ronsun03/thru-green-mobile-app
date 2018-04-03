@@ -83,7 +83,10 @@ class BackgroundLocation extends Component {
     this.props.setCurrentPosition(initialRegion);
     this.props.checkInArea(initialRegion, this.props.user);
     this.props.setCurrentSpeed(speed);
-    this.props.pushDataToDB(initialRegion, speed, this.props.user);
+
+    if (this.props.user) {
+      this.props.pushDataToDB(initialRegion, speed, this.props.user);
+    }
   }
 
   onMotion({location}) {
@@ -113,7 +116,10 @@ class BackgroundLocation extends Component {
     this.props.setCurrentPosition(initialRegion);
     this.props.checkInArea(initialRegion, this.props.user);
     this.props.setCurrentSpeed(speed);
-    this.props.pushDataToDB(initialRegion, speed, this.props.user);
+    
+    if (this.props.user) {
+      this.props.pushDataToDB(initialRegion, speed, this.props.user);
+    }
   }
 
 

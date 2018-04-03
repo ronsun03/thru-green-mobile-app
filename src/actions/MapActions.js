@@ -183,6 +183,7 @@ export const checkInArea = (currentPosition, user) => {
 
       const areaRef = firebase.database().ref('/areas');
       const userRef = firebase.database().ref(`/user/${user.uid}`);
+      const testRef = firebase.database().ref(`/testing`)
       // const appStatsRef = firebase.database().ref(`/appStats/`);
       const liveDBRef = firebase.app('liveDB').database().ref('/');
 
@@ -270,6 +271,18 @@ export const checkInArea = (currentPosition, user) => {
 
                       liveDBRef.update({
                         [sector.SectorID]: true
+                      }, error => {
+                        if (error) {
+                          console.log('Live DB cannot update, error: ', error);
+                          testRef.update({
+                            liveDBRefError: error
+                          })
+                        } else {
+                          console.log('LiveDB successfully updated.');
+                          testRef.update({
+                            liveDBRefError: 'LiveDB successfully updated.'
+                          })
+                        }
                       });
                     } else {
                       console.log('RAN NUM FAIL');
@@ -287,6 +300,18 @@ export const checkInArea = (currentPosition, user) => {
                       userStats: {
                         numTimesEnteredSector: (currentNumTimesEnteredSector + 1),
                         numTimesLightChanged: currentNumTimesLightChanged
+                      }
+                    }, error => {
+                      if (error) {
+                        console.log('UserRef cannot update, error: ', error);
+                        testRef.update({
+                          userRefError: error
+                        })
+                      } else {
+                        console.log('UserRef successfully updated.');
+                        testRef.update({
+                          userRefError: 'UserRef successfully updated.'
+                        })
                       }
                     });
 

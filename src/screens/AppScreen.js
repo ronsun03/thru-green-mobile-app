@@ -37,6 +37,7 @@ class AppScreen extends Component {
     areaRef.once('value', snapshot => {
       AsyncStorage.setItem('areaList', JSON.stringify(snapshot.val())).then(() => {
         console.log('Area List successfully updated.');
+        console.log('areaList: ', snapshot.val());
       })
     })
   }

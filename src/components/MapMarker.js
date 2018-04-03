@@ -11,7 +11,7 @@ class MapMarker extends Component {
     return (
       <MapView.Marker
         coordinate={coordinate}
-        image={require('../../assets/box-marker-120.png')}
+        image={require('../../assets/box-marker-80.png')}
       >
         {/* <MapView.Callout style={styles.callout}>
           <View style={styles.callout}>

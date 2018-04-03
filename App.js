@@ -7,6 +7,8 @@ import { createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
 import * as firebase from 'firebase';
 
+import privateConfig from './private-config';
+
 import reducers from './src/reducers';
 
 import LoginScreen from './src/screens/LoginScreen';
@@ -45,23 +47,13 @@ export default class App extends React.Component {
 
       // Initialize other live database
       const liveDB = firebase.initializeApp(liveDBConfig, "liveDB");
+
+      firebase.app('liveDB').auth().signInWithEmailAndPassword(privateConfig.email, privateConfig.pass)
+        .then(user => {
+          console.log('liveDB successfully authenticated');
+        });
     }
-
-
-    // Use the liveDB variable to retrieve the other app's services
-    // const otherDatabase = otherApp.database();
   }
-
-  // componentDidMount() {
-  //   Font.loadAsync({
-  //     'Dosis-Bold': require('./assets/fonts/Dosis-Bold.ttf'),
-  //     'Dosis-Medium': require('./assets/fonts/Dosis-Medium.ttf'),
-  //     'Dosis-Light': require('./assets/fonts/Dosis-Light.ttf'),
-  //     'OpenSans-Regular': require('./assets/fonts/OpenSans-Regular.ttf'),
-  //     'Roboto-Light': require('./assets/fonts/Roboto-Light.ttf'),
-  //     'Roboto-Thin': require('./assets/fonts/Roboto-Thin.ttf'),
-  //   });
-  // }
 
   render() {
     const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));

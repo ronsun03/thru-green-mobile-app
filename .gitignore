@@ -1,5 +1,7 @@
 node_modules
 
+private-config.js
+
 # OSX
 #
 .DS_Store

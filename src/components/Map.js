@@ -23,63 +23,6 @@ class Map extends Component {
     this.props.getAreas();
   }
 
-  // componentDidMount() {
-  //   console.log('this.props.isAppOn: ', this.props.isAppOn);
-  //
-  //   console.log('isAppOn true, run navigation code');
-  //
-  //   navigator.geolocation.getCurrentPosition((position) => {
-  //     console.log('getCurrentPosition()');
-  //     const lat = parseFloat(position.coords.latitude);
-  //     const long = parseFloat(position.coords.longitude);
-  //
-  //     const initialRegion = {
-  //       latitude: lat,
-  //       longitude: long,
-  //       latitudeDelta: LATITUDE_DELTA,
-  //       longitudeDelta: LONGITUDE_DELTA
-  //     };
-  //
-  //     this.props.setCurrentPosition(initialRegion);
-  //     },
-  //     // error => alert(JSON.stringify(error)),
-  //     error => console.log('getCurrentPosition error', JSON.stringify(error)),
-  //     // null,
-  //     { enableHighAccuracy: true, timeout: 250, maximumAge: 2, distanceFilter: 1 }
-  //   );
-  //
-  //   this.watchId = navigator.geolocation.watchPosition(position => {
-  //       console.log('watchposition: ', position);
-  //
-  //       const lat = parseFloat(position.coords.latitude);
-  //       const long = parseFloat(position.coords.longitude);
-  //
-  //       const lastRegion = {
-  //         latitude: lat,
-  //         longitude: long,
-  //         longitudeDelta: LONGITUDE_DELTA,
-  //         latitudeDelta: LATITUDE_DELTA
-  //       };
-  //
-  //       const d = new Date();
-  //
-  //       // convert speed from m/s to mph
-  //       const speed = position.coords.speed * 2.23694;
-  //
-  //       this.props.setCurrentPosition(lastRegion);
-  //       this.props.checkInArea(lastRegion, this.props.user);
-  //       this.props.setCurrentSpeed(speed);
-  //     },
-  //     error => console.log('watchposition error', error),
-  //     // null,
-  //     { enableHighAccuracy: true, timeout: 250, maximumAge: 2, distanceFilter: 1 }
-  //   );
-  // }
-  //
-  // componentWillUnmount() {
-  //   navigator.geolocation.clearWatch(this.watchId);
-  // }
-
   renderSectorPolygons() {
     const areas = this.props.areas;
 
