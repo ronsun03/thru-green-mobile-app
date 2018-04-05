@@ -54,12 +54,51 @@ class Map extends Component {
         },
       ];
 
+      if (sector.pre) {
+        const prePolygon = [
+          {
+            latitude: sector.pre.pc1,
+            longitude: sector.pre.pd1
+          },
+          {
+            latitude: sector.pre.pc2,
+            longitude: sector.pre.pd2
+          },
+          {
+            latitude: sector.pre.pc3,
+            longitude: sector.pre.pd3
+          },
+          {
+            latitude: sector.pre.pc4,
+            longitude: sector.pre.pd4
+          },
+        ];
+
+        return ([
+          <MapView.Polygon
+            key={sector.SectorID}
+            coordinates={polygon}
+            strokeColor={'rgba(133, 211, 237, .9)'}
+            strokeWidth={2}
+            fillColor={'rgba(133, 211, 237, .15)'}
+          />,
+          <MapView.Polygon
+            key={sector.pre.PreSectorID}
+            coordinates={prePolygon}
+            strokeColor={'rgba(255, 135, 135, .9)'}
+            strokeWidth={2}
+            fillColor={'rgba(255, 135, 135, .15)'}
+          />
+        ]);
+      }
+
+
       return (
         <MapView.Polygon
           key={sector.SectorID}
           coordinates={polygon}
-          strokeColor={'rgba(133, 211, 237, .7)'}
-          strokeWidth={1}
+          strokeColor={'rgba(133, 211, 237, .9)'}
+          strokeWidth={2}
           fillColor={'rgba(133, 211, 237, .15)'}
         />
       );

@@ -19,3 +19,5 @@ export const SET_CURRENT_SPEED = 'set_current_speed';
 export const CREATE_USER_LOADING = 'create_user_loading';
 export const CREATE_USER_ERROR = 'create_user_error';
 export const CREATE_USER_SUCCESS = 'create_user_success';
+export const LAST_PRE_SECTOR = 'last_pre_sector';
+export const DID_LIGHT_CHANGE = 'did_light_change';

@@ -56,26 +56,34 @@ class MapScreen extends Component {
               <Text style={styles.headerText}>Current User Stats</Text>
             </CardSection>
             <ScrollView>
-              <View style={{ marginBottom: 15 }}>
+              <View style={{ marginBottom: 7 }}>
                 <Text>Current Position:</Text>
                 <Text>Latitude: {this.props.currentPosition.latitude}</Text>
                 <Text>Longitude: {this.props.currentPosition.longitude}</Text>
               </View>
-              <View style={{ marginBottom: 15 }}>
-                <Text>User ID:</Text>
-                <Text>{this.props.user ? this.props.user.uid : null}</Text>
-              </View>
-              <View style={{ marginBottom: 15 }}>
+              <View style={{ marginBottom: 7 }}>
                 <Text>In Area:</Text>
                 <Text>{this.props.currentArea ? this.props.currentArea.AreaID : 'None'}</Text>
               </View>
-              <View style={{ marginBottom: 15 }}>
+              <View style={{ marginBottom: 7 }}>
                 <Text>In Sector:</Text>
                 <Text>{this.props.currentSector ? this.props.currentSector.SectorID : 'None'}</Text>
               </View>
-              <View style={{ marginBottom: 15 }}>
+              <View style={{ marginBottom: 7 }}>
+                <Text>Last Pre-Sector:</Text>
+                <Text>{this.props.lastPreSector ? this.props.lastPreSector : 'None'}</Text>
+              </View>
+              <View style={{ marginBottom: 7 }}>
+                <Text>Did Light Change?:</Text>
+                <Text>{this.props.didLightChange ? 'Yes' : 'No'}</Text>
+              </View>
+              <View style={{ marginBottom: 7 }}>
                 <Text>Speed:</Text>
                 <Text>{this.props.currentSpeed} mph</Text>
+              </View>
+              <View style={{ marginBottom: 7 }}>
+                <Text>User ID:</Text>
+                <Text>{this.props.user ? this.props.user.uid : null}</Text>
               </View>
             </ScrollView>
           </View>
@@ -151,7 +159,9 @@ function mapStateToProps(state) {
     currentZone: state.map.currentZone,
     currentArea: state.map.currentArea,
     currentSector: state.map.currentSector,
-    currentSpeed: state.map.currentSpeed
+    lastPreSector: state.map.lastPreSector,
+    currentSpeed: state.map.currentSpeed,
+    didLightChange: state.map.didLightChange
   };
 }
 

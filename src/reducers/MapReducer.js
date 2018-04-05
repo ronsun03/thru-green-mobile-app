@@ -4,7 +4,9 @@ import {
   IN_CURRENT_AREA,
   IN_CURRENT_SECTOR,
   APP_TOGGLE,
-  SET_CURRENT_SPEED
+  SET_CURRENT_SPEED,
+  LAST_PRE_SECTOR,
+  DID_LIGHT_CHANGE
  } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -18,6 +20,7 @@ const INITIAL_STATE = {
   areas: null,
   currentArea: null,
   currentSector: null,
+  lastPreSector: null,
   currentSpeed: 0
 };
 
@@ -38,8 +41,14 @@ export default (state = INITIAL_STATE, action) => {
     case IN_CURRENT_SECTOR:
       return { ...state, currentSector: action.payload };
 
+    case LAST_PRE_SECTOR:
+      return { ...state, lastPreSector: action.payload }
+
     case SET_CURRENT_SPEED:
       return { ...state, currentSpeed: action.payload };
+
+    case DID_LIGHT_CHANGE:
+      return { ...state, didLightChange: action.payload }
 
     default:
       return state;

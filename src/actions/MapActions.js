@@ -10,7 +10,9 @@ import {
   IN_CURRENT_AREA,
   IN_CURRENT_SECTOR,
   APP_TOGGLE,
-  SET_CURRENT_SPEED
+  SET_CURRENT_SPEED,
+  LAST_PRE_SECTOR,
+  DID_LIGHT_CHANGE
 } from './types';
 
 // export const keepAppOnOrOff = (boolean) => {
@@ -118,14 +120,14 @@ export const pushDataToDB = (region, speed, user) => {
 
 export const setCurrentPosition = (region) => {
   return (dispatch) => {
-    const testingRef = firebase.database().ref('/testing');
-
-    testingRef.update({
-      currentLocation: {
-        lat: region.latitude,
-        lng: region.longitude
-      }
-    });
+    // const testingRef = firebase.database().ref('/testing');
+    //
+    // testingRef.update({
+    //   currentLocation: {
+    //     lat: region.latitude,
+    //     lng: region.longitude
+    //   }
+    // });
 
     dispatch({
       type: SET_CURRENT_POSITION,
@@ -233,9 +235,30 @@ export const checkInArea = (currentPosition, user) => {
                 { latitude: sector.c4, longitude: sector.d4 },
               ];
 
-              const inSectorRange = geolib.isPointInside(currentPosition, sectorPolygon);
+              const preSectorPolygon = [
+                { latitude: sector.pre.pc1, longitude: sector.pre.pd1 },
+                { latitude: sector.pre.pc2, longitude: sector.pre.pd2 },
+                { latitude: sector.pre.pc3, longitude: sector.pre.pd3 },
+                { latitude: sector.pre.pc4, longitude: sector.pre.pd4 },
+              ]
 
+              const inSectorRange = geolib.isPointInside(currentPosition, sectorPolygon);
+              const inPreSectorRange = geolib.isPointInside(currentPosition, preSectorPolygon);
+
+              // Let array know that user is in a sector
               isInSectorBooleanArray.push(inSectorRange)
+
+              // If user is in PreSector, push to user stats
+              if (inPreSectorRange) {
+                userRef.update({
+                  preSector: sector.pre.PreSectorID
+                })
+
+                dispatch({
+                  type: LAST_PRE_SECTOR,
+                  payload: sector.pre.PreSectorID
+                })
+              }
 
               // If the user is in it, dispatch and run code
               if (inSectorRange) {
@@ -244,85 +267,91 @@ export const checkInArea = (currentPosition, user) => {
                   payload: sector
                 });
 
+
                 // Ping light to change
                 const currentArea = areas[AreaID];
                 const currentSector = sector;
 
                 userRef.once('value', userSnapshot => {
                   const currentUser = userSnapshot.val();
+                  console.log('currentUser: ', currentUser);
 
-                  // Check is user is entering sector for first time
-                  if (currentUser.lightChecks.isInSector == false) {
-                    console.log('user entering sector for first time');
-                    // Add 1 to number of times user has entered sector
-                    const currentNumTimesEnteredSector = currentUser.userStats.numTimesEnteredSector;
-                    let currentNumTimesLightChanged = currentUser.userStats.numTimesLightChanged;
+                  // Check of current sector matches pre-sector. If they match, run code
+                  const currentSectorsPreSector = sector.pre.PreSectorID;
+                  const usersLastPreSector = currentUser.preSector;
 
-                    // Logic for seeing if light changes
-                    const percentage = currentArea.changePercentage;
-                    const randomNum = Math.random();
-                    let changeLight = false;
+                  if (currentSectorsPreSector === usersLastPreSector) {
+                    // Check is user is entering sector for first time
+                    if (currentUser.lightChecks.isInSector == false) {
+                      console.log('user entering sector for first time');
+                      // Add 1 to number of times user has entered sector
+                      const currentNumTimesEnteredSector = currentUser.userStats.numTimesEnteredSector;
+                      let currentNumTimesLightChanged = currentUser.userStats.numTimesLightChanged;
 
-                    if (randomNum <= percentage) {
-                      console.log('RAN NUM HIT - update live db');
-                      // Only send a light change to live server if randomized number is true
-                      changeLight = true;
-                      currentNumTimesLightChanged++;
+                      // Logic for seeing if light changes
+                      const percentage = currentArea.changePercentage;
+                      const randomNum = Math.random();
+                      let changeLight = false;
 
-                      liveDBRef.update({
-                        [sector.SectorID]: true
+                      if (randomNum <= percentage) {
+                        console.log('RAN NUM HIT - update live db');
+                        // Only send a light change to live server if randomized number is true
+                        changeLight = true;
+                        currentNumTimesLightChanged++;
+
+                        dispatch({
+                          type: DID_LIGHT_CHANGE,
+                          payload: true
+                        })
+
+                        liveDBRef.update({
+                          [sector.SectorID]: true
+                        }, error => {
+                          if (error) {
+                            console.log('Live DB cannot update, error: ', error);
+                            testRef.update({
+                              liveDBRefError: error
+                            })
+                          }
+                        });
+                      } else {
+                        console.log('RAN NUM FAIL');
+                        changeLight = false;
+                      }
+
+                      console.log('user in sector: ', sector.SectorID);
+
+                      // Update user stats
+                      userRef.update({
+                        lightChecks: {
+                          isInSector: true,
+                          currentSector: sector.SectorID
+                        },
+                        userStats: {
+                          numTimesEnteredSector: (currentNumTimesEnteredSector + 1),
+                          numTimesLightChanged: currentNumTimesLightChanged
+                        }
                       }, error => {
                         if (error) {
-                          console.log('Live DB cannot update, error: ', error);
+                          console.log('UserRef cannot update, error: ', error);
                           testRef.update({
-                            liveDBRefError: error
-                          })
-                        } else {
-                          console.log('LiveDB successfully updated.');
-                          testRef.update({
-                            liveDBRefError: 'LiveDB successfully updated.'
+                            userRefError: error
                           })
                         }
                       });
-                    } else {
-                      console.log('RAN NUM FAIL');
-                      changeLight = false;
+
+                      // Add last sector to AsyncStorage
+                      // AsyncStorage.setItem('lastSector', sector.SectorID);
                     }
-
-                    console.log('user in sector: ', sector.SectorID);
-
-                    // Update user stats
-                    userRef.update({
-                      lightChecks: {
-                        isInSector: true,
-                        currentSector: sector.SectorID
-                      },
-                      userStats: {
-                        numTimesEnteredSector: (currentNumTimesEnteredSector + 1),
-                        numTimesLightChanged: currentNumTimesLightChanged
-                      }
-                    }, error => {
-                      if (error) {
-                        console.log('UserRef cannot update, error: ', error);
-                        testRef.update({
-                          userRefError: error
-                        })
-                      } else {
-                        console.log('UserRef successfully updated.');
-                        testRef.update({
-                          userRefError: 'UserRef successfully updated.'
-                        })
-                      }
-                    });
-
-                    // Add last sector to AsyncStorage
-                    AsyncStorage.setItem('lastSector', sector.SectorID);
                   }
 
                   // Check is user went straight from one sector to the other
                   if (currentUser.lightChecks.isInSector == true) {
                     const currentSectorID = sector.SectorID;
                     const userLastSector = currentUser.lightChecks.currentSector;
+
+                    console.log('currentSectorID: ', currentSectorID);
+                    console.log('userLastSector: ', userLastSector);
 
                     if (currentSectorID !== userLastSector) {
                       userRef.update({
@@ -336,9 +365,15 @@ export const checkInArea = (currentPosition, user) => {
                         [userLastSector]: false
                       });
 
-                      AsyncStorage.setItem('lastSector', userLastSector);
+                      dispatch({
+                        type: DID_LIGHT_CHANGE,
+                        payload: false
+                      })
+
+                      // AsyncStorage.setItem('lastSector', userLastSector);
                     }
                   }
+
                 });
               }
             });
@@ -372,7 +407,10 @@ export const checkInArea = (currentPosition, user) => {
                   payload: null
                 });
 
-
+                dispatch({
+                  type: DID_LIGHT_CHANGE,
+                  payload: false
+                })
               })
 
             }
