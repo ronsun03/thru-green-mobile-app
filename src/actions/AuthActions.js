@@ -10,7 +10,10 @@ import {
   FONTS_LOADED,
   CREATE_USER_LOADING,
   CREATE_USER_ERROR,
-  CREATE_USER_SUCCESS
+  CREATE_USER_SUCCESS,
+  TOGGLE_FORGOT_PASSWORD_MODAL,
+  FORGOT_PASSWORD_LOADING,
+  FORGOT_PASSWORD_SENT_SUCCESS
 } from './types';
 
 export const loadFonts = () => {
@@ -21,6 +24,50 @@ export const loadFonts = () => {
     });
   };
 };
+
+export const openForgotPasswordModal = () => {
+  return dispatch => {
+    dispatch({
+      type: TOGGLE_FORGOT_PASSWORD_MODAL,
+      payload: true
+    })
+  }
+}
+
+export const closeForgotPasswordModal = () => {
+  return dispatch => {
+    dispatch({
+      type: TOGGLE_FORGOT_PASSWORD_MODAL,
+      payload: false
+    })
+  }
+}
+
+export const resetPassword = (email, successCB, errorCB) => {
+  return dispatch => {
+    // dispatch({
+    //   type: FORGOT_PASSWORD_LOADING,
+    //   payload: true
+    // })
+
+    firebase.auth().sendPasswordResetEmail(email)
+      .then(() => {
+        console.log('email sent');
+        dispatch({
+          type: FORGOT_PASSWORD_SENT_SUCCESS
+        })
+        successCB();
+      })
+      .catch(error => {
+        // dispatch({
+        //   type: FORGOT_PASSWORD_LOADING,
+        //   payload: false
+        // })
+        console.log('Reset error: ', error);
+        errorCB();
+      })
+  }
+}
 
 export const existingUserLoggedIn = (user, callback) => {
   return (dispatch) => {

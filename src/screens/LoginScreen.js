@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, Image, ScrollView } from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, Modal } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 
-import { ButtonClear } from '../components/common';
-import { existingUserLoggedIn } from '../actions';
+import { ButtonClear, InputWhite } from '../components/common';
+import ForgotPasswordModal from '../components/ForgotPasswordModal';
+import { existingUserLoggedIn, openForgotPasswordModal } from '../actions';
 
 
 import LoginForm from '../components/LoginForm';
@@ -32,6 +33,11 @@ class LoginScreen extends Component {
     )
   }
 
+  forgotPasswordClick() {
+    this.props.openForgotPasswordModal()
+  }
+
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -56,7 +62,20 @@ class LoginScreen extends Component {
             <View style={styles.formHolder}>
               <LoginForm navigation={this.props.navigation} />
               {this.renderCreateAccountButton()}
+              <TouchableOpacity
+                style={{ alignSelf: 'center', alignItems: 'center', width: '100%' }}
+                onPress={() => { this.forgotPasswordClick() }}
+              >
+                <View style={{ alignItems: 'center', alignSelf: 'center' }}>
+                  <Text style={{ alignSelf: 'center', textAlign: 'center', color: '#333' }}>
+                    Forgot Password? Click Here.
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </View>
+
+            <ForgotPasswordModal />
+
           </View>
         </ScrollView>
       </View>
@@ -114,7 +133,16 @@ const styles = {
     position: 'relative',
     width: '80%',
     alignSelf: 'center'
+  },
+  modalContainer: {
+    marginLeft: 15,
+    marginRight: 15,
+    padding: 15,
+    borderColor: 'black',
+    borderWidth: 1,
+    borderStyle: 'solid'
+
   }
 };
 
-export default connect(null, { existingUserLoggedIn })(LoginScreen);
+export default connect(null, { existingUserLoggedIn, openForgotPasswordModal })(LoginScreen);

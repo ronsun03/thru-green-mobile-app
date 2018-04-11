@@ -7,7 +7,10 @@ import {
   FONTS_LOADED,
   CREATE_USER_LOADING,
   CREATE_USER_ERROR,
-  CREATE_USER_SUCCESS
+  CREATE_USER_SUCCESS,
+  TOGGLE_FORGOT_PASSWORD_MODAL,
+  FORGOT_PASSWORD_LOADING,
+  FORGOT_PASSWORD_SENT_SUCCESS
  } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -18,7 +21,10 @@ const INITIAL_STATE = {
   loading: false,
   fontsLoaded: false,
   createUserLoading: false,
-  createUserError: ''
+  createUserError: '',
+  forgotPasswordModalVisible: false,
+  forgotPasswordLoading: false,
+  forgotPasswordSentSuccess: false
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -55,6 +61,15 @@ export default (state = INITIAL_STATE, action) => {
 
     case CREATE_USER_SUCCESS:
       return { ...state, createUserLoading: false, createUserError: '' }
+
+    case TOGGLE_FORGOT_PASSWORD_MODAL:
+      return { ...state, forgotPasswordModalVisible: action.payload }
+
+    case FORGOT_PASSWORD_LOADING:
+      return { ...state, forgotPasswordLoading: true }
+
+    case FORGOT_PASSWORD_SENT_SUCCESS:
+      return { ...state, forgotPasswordLoading: false, forgotPasswordModalVisible: false, forgotPasswordSentSuccess: true }
 
     default:
       return state;

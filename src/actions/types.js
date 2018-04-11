@@ -21,3 +21,6 @@ export const CREATE_USER_ERROR = 'create_user_error';
 export const CREATE_USER_SUCCESS = 'create_user_success';
 export const LAST_PRE_SECTOR = 'last_pre_sector';
 export const DID_LIGHT_CHANGE = 'did_light_change';
+export const TOGGLE_FORGOT_PASSWORD_MODAL = 'toggle_forgot_password_modal';
+export const FORGOT_PASSWORD_LOADING = 'forgot_password_loading';
+export const FORGOT_PASSWORD_SENT_SUCCESS = 'forgot_password_sent_success';
