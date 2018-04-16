@@ -2,16 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSMotionUsageDescription</key>
-	<string>Accelerometer use increases battery efficiency by intelligently toggling location-tracking</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app requires background tracking</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app requires background tracking</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>thrugreen</string>
+	<string>ThruGreen</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -27,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>3</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -41,10 +37,18 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app requires background tracking</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app requires background tracking</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSMotionUsageDescription</key>
+	<string>Accelerometer use increases battery efficiency by intelligently toggling location-tracking</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Roboto-Thin.ttf</string>
+		<string>Dosis-Medium.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
 		<string>Feather.ttf</string>
