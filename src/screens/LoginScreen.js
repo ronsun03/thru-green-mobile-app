@@ -41,8 +41,8 @@ class LoginScreen extends Component {
   render() {
     return (
       <KeyboardAvoidingView>
-        <View style={{ flex: 1 }}>
-          <ScrollView contentContainerStyle={{ flex: 1 }}>
+        {/* <View style={{ flex: 1 }}> */}
+          {/* <ScrollView> */}
             <View style={styles.loginContainer}>
               <View style={styles.topLogin}>
                 <View style={styles.centerColumn}>
@@ -51,12 +51,6 @@ class LoginScreen extends Component {
                       style={styles.image}
                       source={require('../../assets/images/logo.jpg')}
                     />
-                    {/* <Text style={styles.titleStyle}>
-                      ThruGreen
-                    </Text>
-                    <Text style={styles.subtitleStyle}>
-                      Stay Safe. Arrive Quickly.
-                    </Text> */}
                   </View>
                 </View>
               </View>
@@ -78,8 +72,8 @@ class LoginScreen extends Component {
               <ForgotPasswordModal />
 
             </View>
-          </ScrollView>
-        </View>
+          {/* </ScrollView> */}
+        {/* </View> */}
       </KeyboardAvoidingView>
     );
   }
@@ -108,7 +102,7 @@ const styles = {
   },
   loginContainer: {
     backgroundColor: 'white',
-    flex: 1,
+    // flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
     height: '100%'
@@ -116,7 +110,9 @@ const styles = {
   topLogin: {
     flex: 3,
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    // marginTop: 110,
+    // marginBottom: 110
   },
   formHolder: {
     flex: 2

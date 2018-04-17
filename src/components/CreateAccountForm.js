@@ -132,7 +132,7 @@ class CreateAccountForm extends Component {
         <View style={styles.containerStyle}>
           <TouchableOpacity
             style={{ alignSelf: 'center', alignItems: 'center', width: '100%' }}
-            onPress={() => { this.navigateToLogin() }}
+            onPress={() => { console.log('navigate');  this.navigateToLogin() }}
           >
             <View style={{ alignItems: 'center', alignSelf: 'center' }}>
               <Text style={{ alignSelf: 'center', textAlign: 'center', color: '#333' }}>
