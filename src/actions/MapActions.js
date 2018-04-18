@@ -43,6 +43,18 @@ export const appToggle = (isOn, user) => {
       });
     });
 
+    // if app is turned on, download area list
+    if (isOn) {
+      // Get latest list of areas and store in localstorage
+      const areaRef = firebase.database().ref('/areas');
+      areaRef.once('value', snapshot => {
+        AsyncStorage.setItem('areaList', JSON.stringify(snapshot.val())).then(() => {
+          console.log('Area List successfully updated.');
+          console.log('areaList: ', snapshot.val());
+        })
+      });
+    }
+
     // if app is turned off, turn last sector off
     if (!isOn) {
       const userRef = firebase.database().ref(`/user/${user.uid}`);
