@@ -431,15 +431,41 @@ export const checkInArea = (currentPosition, user) => {
 
         // If user was in no areas, clear our current area and sector values
         if (!isUserInAnyArea) {
-          dispatch({
-            type: IN_CURRENT_AREA,
-            payload: null
-          });
+          console.log('user is not in any areas, clear values');
+          
+          const lastSectorRef = firebase.database().ref(`/user/${user.uid}/lightChecks/currentSector`)
 
-          dispatch({
-            type: IN_CURRENT_SECTOR,
-            payload: null
-          });
+          lastSectorRef.once('value', lastSectorRefSnapshot => {
+            const lastSector = lastSectorRefSnapshot.val();
+
+            const liveDBRef = firebase.app('liveDB').database().ref('/');
+
+            liveDBRef.update({
+              [lastSector]: false
+            });
+
+            userRef.update({
+              lightChecks: {
+                isInSector: false,
+                lastSector
+              }
+            });
+
+            dispatch({
+              type: IN_CURRENT_AREA,
+              payload: null
+            });
+
+            dispatch({
+              type: IN_CURRENT_SECTOR,
+              payload: null
+            });
+
+            dispatch({
+              type: DID_LIGHT_CHANGE,
+              payload: false
+            })
+          })
         }
       })
 
