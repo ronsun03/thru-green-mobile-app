@@ -25,9 +25,10 @@ class BackgroundLocation extends Component {
       const configurationOptions = {
         desiredAccuracy: 0,
         distanceFilter: 2,
-        // disableElasticity: true,
+        disableElasticity: true,
         fastestLocationUpdateInterval: 2000,
-        activityRecognitionInterval: 1000,
+        stationaryRadius: 1,
+        // activityRecognitionInterval: 1000,
         notificationTitle: 'ThruGreen Active',
         notificationText: 'Background location services are running',
         // stationaryRadius: 10
@@ -116,7 +117,7 @@ class BackgroundLocation extends Component {
     this.props.setCurrentPosition(initialRegion);
     this.props.checkInArea(initialRegion, this.props.user);
     this.props.setCurrentSpeed(speed);
-    
+
     if (this.props.user) {
       this.props.pushDataToDB(initialRegion, speed, this.props.user);
     }
