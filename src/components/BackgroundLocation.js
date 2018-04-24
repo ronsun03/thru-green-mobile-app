@@ -24,7 +24,7 @@ class BackgroundLocation extends Component {
       console.log(`appToggle is ${appToggle}, add BackgroundGeolocation listener`);
       const configurationOptions = {
         desiredAccuracy: 0,
-        distanceFilter: 2,
+        distanceFilter: 4,
         disableElasticity: true,
         fastestLocationUpdateInterval: 2000,
         stationaryRadius: 1,
