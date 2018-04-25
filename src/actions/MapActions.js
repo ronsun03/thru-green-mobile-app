@@ -106,16 +106,6 @@ export const appToggle = (isOn, user) => {
         })
       })
 
-      // AsyncStorage.getItem('lastSector').then(response => {
-      //   const lastSector = response;
-      //
-      //   liveDBRef.update({
-      //     [lastSector]: false
-      //   });
-      //
-      //   AsyncStorage.removeItem('lastSector');
-      // });
-
       userRef.update({
         lightChecks: {
           isInSector: false
