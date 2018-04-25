@@ -33,6 +33,18 @@ export const initializeToggle = boolean => {
   }
 }
 
+export const appForceClosed = () => {
+  return (dispatch) => {
+    AsyncStorage.setItem('appToggle', JSON.stringify(false)).then(() => {
+      console.log(`App was closed. Toggle set to false and stored in async storage.`);
+      dispatch({
+        type: APP_TOGGLE,
+        payload: false
+      });
+    });
+  }
+}
+
 export const appToggle = (isOn, user) => {
   return (dispatch) => {
     AsyncStorage.setItem('appToggle', JSON.stringify(isOn)).then(() => {
@@ -60,15 +72,49 @@ export const appToggle = (isOn, user) => {
       const userRef = firebase.database().ref(`/user/${user.uid}`);
       const liveDBRef = firebase.app('liveDB').database().ref('/');
 
-      AsyncStorage.getItem('lastSector').then(response => {
-        const lastSector = response;
+      const lastSectorRef = firebase.database().ref(`/user/${user.uid}/lightChecks/currentSector`)
+
+      lastSectorRef.once('value', lastSectorRefSnapshot => {
+        const lastSector = lastSectorRefSnapshot.val();
+
+        const liveDBRef = firebase.app('liveDB').database().ref('/');
 
         liveDBRef.update({
           [lastSector]: false
         });
 
-        AsyncStorage.removeItem('lastSector');
-      });
+        userRef.update({
+          lightChecks: {
+            isInSector: false,
+            lastSector
+          }
+        });
+
+        dispatch({
+          type: IN_CURRENT_AREA,
+          payload: null
+        });
+
+        dispatch({
+          type: IN_CURRENT_SECTOR,
+          payload: null
+        });
+
+        dispatch({
+          type: DID_LIGHT_CHANGE,
+          payload: false
+        })
+      })
+
+      // AsyncStorage.getItem('lastSector').then(response => {
+      //   const lastSector = response;
+      //
+      //   liveDBRef.update({
+      //     [lastSector]: false
+      //   });
+      //
+      //   AsyncStorage.removeItem('lastSector');
+      // });
 
       userRef.update({
         lightChecks: {
@@ -432,7 +478,7 @@ export const checkInArea = (currentPosition, user) => {
         // If user was in no areas, clear our current area and sector values
         if (!isUserInAnyArea) {
           console.log('user is not in any areas, clear values');
-          
+
           const lastSectorRef = firebase.database().ref(`/user/${user.uid}/lightChecks/currentSector`)
 
           lastSectorRef.once('value', lastSectorRefSnapshot => {

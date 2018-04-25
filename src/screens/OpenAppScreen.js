@@ -36,6 +36,8 @@ class OpenAppScreen extends Component {
   }
 
   _handleAppStateChange = nextAppState => {
+    console.log('nextAppState: ', nextAppState);
+
     AsyncStorage.getItem('tempData').then(response => {
       if (response) {
         const array = JSON.parse(response);
@@ -50,6 +52,21 @@ class OpenAppScreen extends Component {
           });
       }
     })
+
+    // const debug = firebase.database().ref(`/testing/close`)
+    // debug.update({
+    //   message: 'change'
+    // });
+
+
+    // if app is force closed, turn app toggle off and turn off last sector
+    // if (nextAppState === 'inactive') {
+    //   this.props.appForceClosed();
+    //   const debug = firebase.database().ref(`/testing/close`)
+    //   debug.update({
+    //     message: 'inactive'
+    //   });
+    // }
   }
 
   render() {
