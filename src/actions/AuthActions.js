@@ -1,5 +1,7 @@
 import firebase from 'firebase';
 import { Keyboard } from 'react-native';
+import config from './config';
+import axios from 'axios';
 
 import {
   EMAIL_CHANGED,
@@ -15,6 +17,8 @@ import {
   FORGOT_PASSWORD_LOADING,
   FORGOT_PASSWORD_SENT_SUCCESS
 } from './types';
+
+const apiURL = config.apiURL;
 
 export const loadFonts = () => {
   console.log('run loadFonts()');
@@ -116,78 +120,96 @@ export const createUser = ({ name, email, password, passwordConfirm }, callback)
 
       console.log('passwordCheck: ', passwordCheck);
 
-      if (!name) {
-        dispatch({
-          type: CREATE_USER_ERROR,
-          payload: 'Please enter your name.'
-        });
+      console.log('url: ', apiURL);
 
-        return;
-      }
+      // Check if registration limit has been reached
+      axios.get(`${apiURL}/api/admin/check-registration-limit`).then(response => {
+        console.log('response: ', response);
+        const allowRegistration = response.data.boolean;
 
-      if (!email) {
-        dispatch({
-          type: CREATE_USER_ERROR,
-          payload: 'Please enter an email address.'
-        });
+        // If allowRegistration is true, allow registration to proceed
+        if (allowRegistration) {
+          if (!name) {
+            dispatch({
+              type: CREATE_USER_ERROR,
+              payload: 'Please enter your name.'
+            });
 
-        return;
-      }
+            return;
+          }
 
-      if (!passwordCheck) {
-        dispatch({
-          type: CREATE_USER_ERROR,
-          payload: 'Passwords must match. Please try again.'
-        });
+          if (!email) {
+            dispatch({
+              type: CREATE_USER_ERROR,
+              payload: 'Please enter an email address.'
+            });
 
-        return;
-      }
+            return;
+          }
 
-      if (passwordCheck) {
-        dispatch({
-          type: CREATE_USER_LOADING
-        });
+          if (!passwordCheck) {
+            dispatch({
+              type: CREATE_USER_ERROR,
+              payload: 'Passwords must match. Please try again.'
+            });
 
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-          .then(user => {
-            console.log('create user: ', user);
-            const userRef = firebase.database().ref(`/user/${user.uid}`);
-            userRef
-              .update({
-                admin: false,
-                lightChecks: {
-                  isInSector: false
-                },
-                profileData: {
-                  name
-                },
-                userStats: {
-                  numTimesEnteredSector: 0,
-                  numTimesLightChanged: 0
-                }
+            return;
+          }
+
+          if (passwordCheck) {
+            dispatch({
+              type: CREATE_USER_LOADING
+            });
+
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+              .then(user => {
+                console.log('create user: ', user);
+                const userRef = firebase.database().ref(`/user/${user.uid}`);
+                userRef
+                  .update({
+                    admin: false,
+                    lightChecks: {
+                      isInSector: false
+                    },
+                    profileData: {
+                      name
+                    },
+                    userStats: {
+                      numTimesEnteredSector: 0,
+                      numTimesLightChanged: 0
+                    }
+                  })
+                  .then(() => {
+                    dispatch({
+                      type: CREATE_USER_SUCCESS
+                    })
+                    callback();
+                  });
               })
-              .then(() => {
-                dispatch({
-                  type: CREATE_USER_SUCCESS
-                })
-                callback();
+              .catch(error => {
+                console.log('create user error: ', error);
+                if (error.message === 'The email address is badly formatted.') {
+                  dispatch({
+                    type: CREATE_USER_ERROR,
+                    payload: 'Please enter a valid email address.'
+                  });
+                } else {
+                  dispatch({
+                    type: CREATE_USER_ERROR,
+                    payload: error.message
+                  });
+                }
               });
-          })
-          .catch(error => {
-            console.log('create user error: ', error);
-            if (error.message === 'The email address is badly formatted.') {
-              dispatch({
-                type: CREATE_USER_ERROR,
-                payload: 'Please enter a valid email address.'
-              });
-            } else {
-              dispatch({
-                type: CREATE_USER_ERROR,
-                payload: error.message
-              });
-            }
+          }
+        }
+
+        if (!allowRegistration) {
+          dispatch({
+            type: CREATE_USER_ERROR,
+            payload: 'User registration limit has been reached. \nPlease try again at a later date.'
           });
-      }
+        }
+      })
   };
 };
 

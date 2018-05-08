@@ -32,11 +32,6 @@ class CreateAccountForm extends Component {
   onButtonPress() {
     const { name, email, password, passwordConfirm } = this.state;
 
-    // if (!name) {
-    //   this.setState({ error: 'Please enter your name.' });
-    //   return;
-    // }
-
     this.props.createUser({ name, email, password, passwordConfirm }, () => {
       this.props.navigation.navigate('main');
       this.setState({
@@ -150,7 +145,8 @@ const styles = {
   errorTextStyle: {
     fontSize: 14,
     alignSelf: 'center',
-    color: 'red'
+    color: 'red',
+    textAlign: 'center'
   },
   containerStyle: {
     padding: 5,
