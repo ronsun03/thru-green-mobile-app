@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import { Keyboard } from 'react-native';
+import { Keyboard, AsyncStorage } from 'react-native';
 import config from './config';
 import axios from 'axios';
 
@@ -15,7 +15,11 @@ import {
   CREATE_USER_SUCCESS,
   TOGGLE_FORGOT_PASSWORD_MODAL,
   FORGOT_PASSWORD_LOADING,
-  FORGOT_PASSWORD_SENT_SUCCESS
+  FORGOT_PASSWORD_SENT_SUCCESS,
+  APP_TOGGLE,
+  IN_CURRENT_AREA,
+  IN_CURRENT_SECTOR,
+  DID_LIGHT_CHANGE
 } from './types';
 
 const apiURL = config.apiURL;
@@ -257,11 +261,62 @@ export const loginUser = ({ email, password }, callback) => {
   };
 };
 
-export const logout = (callback) => {
+export const logout = (user, callback) => {
   return (dispatch) => {
-    // firebase.auth().onAuthStateChanged(user => {
-    //   console.log('Current User:', user);
-    // });
+    AsyncStorage.setItem('appToggle', JSON.stringify(false)).then(() => {
+      console.log(`App toggle set to false and stored in async storage.`);
+      dispatch({
+        type: APP_TOGGLE,
+        payload: false
+      });
+    });
+
+    const userRef = firebase.database().ref(`/user/${user.uid}`);
+    const liveDBRef = firebase.app('liveDB').database().ref('/');
+
+    const lastSectorRef = firebase.database().ref(`/user/${user.uid}/lightChecks/currentSector`)
+
+    lastSectorRef.once('value', lastSectorRefSnapshot => {
+      const lastSector = lastSectorRefSnapshot.val();
+
+      const liveDBRef = firebase.app('liveDB').database().ref('/');
+
+      liveDBRef.update({
+        [lastSector]: false
+      });
+
+      userRef.update({
+        lightChecks: {
+          isInSector: false,
+          lastSector
+        }
+      });
+
+      dispatch({
+        type: IN_CURRENT_AREA,
+        payload: null
+      });
+
+      dispatch({
+        type: IN_CURRENT_SECTOR,
+        payload: null
+      });
+
+      dispatch({
+        type: DID_LIGHT_CHANGE,
+        payload: false
+      })
+    })
+
+    userRef.update({
+      lightChecks: {
+        isInSector: false
+      }
+    });
+
+
+
+
 
     firebase.auth().signOut()
       .then(() => {

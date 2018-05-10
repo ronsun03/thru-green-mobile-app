@@ -22,7 +22,7 @@ class ProfileScreen extends Component {
   }
 
   logoutUser() {
-    this.props.logout(() => {
+    this.props.logout(this.props.user, () => {
       this.props.navigation.navigate('welcome');
     });
   }
