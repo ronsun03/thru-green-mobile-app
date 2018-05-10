@@ -122,8 +122,19 @@ export const createUser = ({ name, email, password, passwordConfirm }, callback)
 
       console.log('url: ', apiURL);
 
+      // axios({
+      //   method: 'get',
+      //   url: `${apiURL}/api/admin/check-registration-limit`,
+      //   headers: {
+      //     Accept: 'application/json',
+      //     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+      //   }
+      // })
+
       // Check if registration limit has been reached
-      axios.get(`${apiURL}/api/admin/check-registration-limit`).then(response => {
+
+      axios.get(`${apiURL}/api/admin/check-registration-limit`)
+      .then(response => {
         console.log('response: ', response);
         const allowRegistration = response.data.boolean;
 
@@ -209,6 +220,8 @@ export const createUser = ({ name, email, password, passwordConfirm }, callback)
             payload: 'User registration limit has been reached. \nPlease try again at a later date.'
           });
         }
+      }).catch(error => {
+        console.log('axios error: ', error);
       })
   };
 };
