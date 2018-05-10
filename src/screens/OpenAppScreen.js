@@ -5,6 +5,7 @@ import firebase from 'firebase';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
+import config from '../actions/config';
 import * as actions from '../actions';
 
 import AppLoadingScreen from '../components/AppLoadingScreen';
@@ -42,7 +43,7 @@ class OpenAppScreen extends Component {
       if (response) {
         const array = JSON.parse(response);
 
-        axios.post('http://ec2-18-219-64-185.us-east-2.compute.amazonaws.com:8080/api/push-array-to-sql', array)
+        axios.post(`${config.apiURL}/api/push-array-to-sql`, array)
           .then(response => {
             console.log('tempData successfully pushed to sql DB');
             AsyncStorage.removeItem('tempData')
