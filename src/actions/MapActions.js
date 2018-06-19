@@ -387,9 +387,6 @@ export const checkInArea = (currentPosition, user) => {
                           })
                         }
                       });
-
-                      // Add last sector to AsyncStorage
-                      // AsyncStorage.setItem('lastSector', sector.SectorID);
                     }
                   }
 
@@ -417,8 +414,6 @@ export const checkInArea = (currentPosition, user) => {
                         type: DID_LIGHT_CHANGE,
                         payload: false
                       })
-
-                      // AsyncStorage.setItem('lastSector', userLastSector);
                     }
                   }
 
